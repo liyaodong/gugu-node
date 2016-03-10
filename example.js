@@ -1,4 +1,9 @@
 import CONFIG from './config';
-import { Init } from './lib/index';
+import Gugu from './lib/index';
 
-const inst = new Init(CONFIG);
+const inst = new Gugu(CONFIG);
+
+inst.setup()
+  .then(() => inst.print('xxx'))
+  .then(() => console.log('print ok'))
+  .catch(inst._catchErr);
