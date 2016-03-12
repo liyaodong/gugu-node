@@ -12,10 +12,15 @@ import Gugu from '../../lib/index';
 describe('GUGU sdk', () => {
   const test = new Gugu();
   const test1 = new Gugu(CONFIG);
+  const test2 = new Gugu({ x: 1 });
 
   it('shoudle pass config', () => {
     assert.ok(typeof test.CONFIG === 'undefined');
     assert.ok(typeof test1.CONFIG === 'object');
+  });
+
+  it('should error when some key not pass', () => {
+    assert.ok(Object.keys(test2).length === 0);
   });
 
   describe('#_flatStrArray', () => {
@@ -31,8 +36,20 @@ describe('GUGU sdk', () => {
   });
 
   describe('#_encodPic', () => {
-    it('#_encodePic should reject none exist image', () => {
+    it('should reject none exist image', () => {
       assert.isRejected(test1._encodePic('xxx'));
+    });
+  });
+
+  describe('#_checkExist', () => {
+    const obj = { a: 'x', b: 'y'};
+
+    it('should return true, when all key exist', () => {
+      assert.isTrue(test1._checkExist(obj, ['a', 'b']));
+    });
+
+    it('should return false, when some key not exist', () => {
+      assert.isFalse(test1._checkExist(obj, ['x']));
     });
   });
 
