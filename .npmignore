@@ -1,0 +1,5 @@
+test/
+lib/
+example.js
+.babelrc
+.eslintc

@@ -1,14 +1,15 @@
 {
   "name": "gugu-node",
-  "version": "1.0.0",
+  "version": "1.0.2",
   "description": "unofficial memobird node sdk",
   "main": "index.js",
   "directories": {
     "test": "test"
   },
   "scripts": {
-    "test": "mocha test/lib/index.js --require babel-core/register",
-    "example": "babel-node example --presets es2015"
+    "test": "eslint lib/index.js && mocha test/lib/index.js --require babel-core/register",
+    "start": "babel-node example --presets es2015",
+    "build": "babel lib/index.js --presets es2015 -o ./index.js"
   },
   "repository": {
     "type": "git",
@@ -35,6 +36,7 @@
   },
   "dependencies": {
     "bluebird": "^3.3.4",
+    "gm": "^1.21.1",
     "iconv-lite": "^0.4.13",
     "request-promise": "^2.0.1"
   }
