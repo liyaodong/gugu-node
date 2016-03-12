@@ -1,4 +1,4 @@
-# gugu-node
+# gugu-node [![Build Status](http://img.shields.io/travis/liyaodong/gugu-node.svg)](https://travis-ci.org/liyaodong/gugu-node) [![Npm Status](https://img.shields.io/npm/v/gugu-node.svg)](https://www.npmjs.com/package/gugu-node)
 
 ## Install
 `$ npm i gugu-node`
