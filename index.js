@@ -6,6 +6,10 @@ Object.defineProperty(exports, "__esModule", {
 
 var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
 
+var _fs = require('fs');
+
+var _fs2 = _interopRequireDefault(_fs);
+
 var _gm = require('gm');
 
 var _gm2 = _interopRequireDefault(_gm);
@@ -35,13 +39,16 @@ var Gugu = function () {
   function Gugu(CONFIG) {
     _classCallCheck(this, Gugu);
 
-    if (typeof CONFIG === 'undefined') {
+    if (CONFIG === undefined) {
       console.error('ERR: undefined CONFIG');
       return;
     }
+    var keys = ['useridentifying', 'memobirdID', 'ak'];
+    if (!this._checkExist(CONFIG, keys)) return;
 
     this.CONFIG = CONFIG;
     this.isReady = true;
+    this.userID = null;
   }
 
   _createClass(Gugu, [{
@@ -49,10 +56,13 @@ var Gugu = function () {
     value: function setup() {
       var _this = this;
 
+      if (this.CONFIG === undefined) return _bluebird2.default.reject('config error');
+      if (this.userID !== null) return _bluebird2.default.resolve();
+
       return this._bindAccount().then(function () {
         return _this;
       }).catch(function () {
-        return _bluebird2.default.reject('setup fail, please check your config');
+        return _bluebird2.default.reject('can not binding your account');
       });
     }
   }, {
@@ -69,7 +79,7 @@ var Gugu = function () {
       return _bluebird2.default.resolve().then(function () {
         return Array.isArray(str) ? _this2._flatStrArray(str) : _this2._encode(str);
       }).then(function (printcontent) {
-        return _this2._request('print', { printcontent: printcontent });
+        return _this2._request('print', { printcontent: printcontent, userID: _this2.userID });
       }).then(function (d) {
         if (d.showapi_res_code === 1) {
           return _bluebird2.default.resolve(d);
@@ -88,6 +98,15 @@ var Gugu = function () {
     // private
 
   }, {
+    key: '_checkExist',
+    value: function _checkExist(obj, keys) {
+      return keys.every(function (v) {
+        var isExist = obj.hasOwnProperty(v);
+        if (!isExist) console.error('ERR: ' + v + ' is undefined, please check');
+        return isExist;
+      });
+    }
+  }, {
     key: '_bindAccount',
     value: function _bindAccount() {
       var _this3 = this;
@@ -95,6 +114,7 @@ var Gugu = function () {
       return this._request('bind').then(function (d) {
         if (d.showapi_res_code === 1) {
           _this3.isReady = true;
+          _this3.userID = d.showapi_userid;
         } else if (d.showapi_res_code === 0) {
           _bluebird2.default.reject(d.showapi_res_error);
         } else {
@@ -105,11 +125,11 @@ var Gugu = function () {
   }, {
     key: '_request',
     value: function _request(type) {
-      var params = arguments.length <= 1 || arguments[1] === undefined ? {} : arguments[1];
-      var _CONFIG = this.CONFIG;
-      var ak = _CONFIG.ak;
-      var memobirdID = _CONFIG.memobirdID;
-      var useridentifying = _CONFIG.useridentifying;
+      var params = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : {};
+      var _CONFIG = this.CONFIG,
+          ak = _CONFIG.ak,
+          memobirdID = _CONFIG.memobirdID,
+          useridentifying = _CONFIG.useridentifying;
 
       var defaultParams = {
         ak: ak, memobirdID: memobirdID, useridentifying: useridentifying,
@@ -162,9 +182,17 @@ var Gugu = function () {
     }
   }, {
     key: '_encodePic',
-    value: function _encodePic(path) {
+    value: function _encodePic(image) {
       return new _bluebird2.default(function (res, rej) {
-        (0, _gm2.default)(path).resize(384).flip().type('Grayscale').colors(2).toBuffer('bmp', function (err, buffer) {
+        if (typeof image === 'string') {
+          try {
+            _fs2.default.readFileSync(image);
+          } catch (e) {
+            rej(e);
+          }
+        }
+
+        (0, _gm2.default)(image).resize(384).flip().type('Grayscale').colors(2).toBuffer('bmp', function (err, buffer) {
           if (err) rej(err);
           res('P:' + buffer.toString('base64'));
         });

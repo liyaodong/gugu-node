@@ -1,6 +1,6 @@
 {
   "name": "gugu-node",
-  "version": "1.0.6",
+  "version": "1.0.7",
   "description": "unofficial memobird node sdk",
   "main": "index.js",
   "directories": {
@@ -9,7 +9,8 @@
   "scripts": {
     "test": "eslint lib/index.js && mocha test/lib/index.js --compilers js:babel-register",
     "start": "babel-node example --presets es2015",
-    "build": "babel lib/index.js --presets es2015 -o ./index.js"
+    "build": "babel lib/index.js --presets es2015 -o ./index.js",
+    "prepublish": "npm run build"
   },
   "repository": {
     "type": "git",
