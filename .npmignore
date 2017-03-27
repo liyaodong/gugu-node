@@ -1,5 +1,6 @@
 test/
 lib/
 example.js
+config.js
 .babelrc
 .eslintc

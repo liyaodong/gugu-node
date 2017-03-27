@@ -8,14 +8,14 @@ const strs = [
     type: 'text',
     value: 'Hello, World!',
   },
-  {
-    type: 'pic',
-    value: 'test/images/cat.jpg',
-  },
-  {
-    type: 'pic_url',
-    value: 'http://3.im.guokr.com/OYnNTiIv7BqE3mKECxYluSRBssRB7HUdfIAwF_QrhxwAAQAAAAEAAFBO.png',
-  },
+  // {
+  //   type: 'pic',
+  //   value: 'test/images/cat.jpg',
+  // },
+  // {
+  //   type: 'pic_url',
+  //   value: 'http://3.im.guokr.com/OYnNTiIv7BqE3mKECxYluSRBssRB7HUdfIAwF_QrhxwAAQAAAAEAAFBO.png',
+  // },
 ];
 
 inst.setup()
